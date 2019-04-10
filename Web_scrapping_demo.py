@@ -20,8 +20,10 @@ data_quotes = []
 
 for row in quote_tag.find_all('div', attrs = {'class': 'portfolio-image'}):
     quotes = {}
-    quotes['quote'] = row.img.get('alt')
-    quotes['url'] = row.img.get('src')
+    full_quote = row.img.get('alt')
+    src_quote = row.img.get('src')
+    quotes['quote'] = full_quote[:full_quote.rfind('.') + 1] # .rfind returns the count of argumetment possittion in a given string
+    quotes['url'] = src_quote
     data_quotes.append(quotes)
     #print(quotes)
 
