@@ -12,13 +12,13 @@ soup = bs4.BeautifulSoup(reqs.text, 'lxml')
 img_tag = list(img_tag)
 print(img_tag[0])'''
 
-table = soup.find('div', attrs = {'id': 'portfolio'})
+quote_tag = soup.find('div', attrs = {'id': 'portfolio'})
 
 #print(table.article.prettify())
 
 data_quotes = []
 
-for row in table.find_all('div', attrs = {'class': 'portfolio-image'}):
+for row in quote_tag.find_all('div', attrs = {'class': 'portfolio-image'}):
     quotes = {}
     quotes['quote'] = row.img.get('alt')
     quotes['url'] = row.img.get('src')
@@ -26,9 +26,10 @@ for row in table.find_all('div', attrs = {'class': 'portfolio-image'}):
     #print(quotes)
 
 with open('Quotes_data.csv', 'w') as file:
-     writer = csv.DictWriter(file, ['quote', 'url'])
-     writer.writeheader()
-     for quote in data_quotes:
+    writer = csv.DictWriter(file, ['quote', 'url'])
+    writer.writeheader()
+    for quote in data_quotes:
          writer.writerow(quote)
 
-#print(table.find_all('div', attrs = {'id': 'portfolio'}))
+
+
