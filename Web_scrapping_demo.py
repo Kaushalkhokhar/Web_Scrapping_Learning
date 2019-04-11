@@ -1,37 +1,42 @@
+from bs4 import BeautifulSoup
 import requests
-import bs4
 import csv
 
-reqs = requests.get('http://www.values.com/inspirational-quotes')
-soup = bs4.BeautifulSoup(reqs.text, 'lxml')
 
-# print(soup.prettify())
-
-'''img_tag = soup.find_all('div', class_ = ''):
-    pass)
-img_tag = list(img_tag)
-print(img_tag[0])'''
-
-quote_tag = soup.find('div', attrs = {'id': 'portfolio'})
-
-#print(table.article.prettify())
+f = open('Quotes_data_2.csv', 'w')
+writer = csv.DictWriter(f, ['quotes', 'source'])
+writer.writeheader()
 
 data_quotes = []
 
-for row in quote_tag.find_all('div', attrs = {'class': 'portfolio-image'}):
-    quotes = {}
-    full_quote = row.img.get('alt')
-    src_quote = row.img.get('src')
-    quotes['quote'] = full_quote[:full_quote.rfind('.') + 1] # .rfind returns the count of argumetment possittion in a given string
-    quotes['url'] = src_quote
-    data_quotes.append(quotes)
-    #print(quotes)
+for i in range(1,225):
+    
+    # To define soup object 
+    url = "http://www.values.com/inspirational-quotes" + "?" + "page={0}".format(i) 
+    response = requests.get(url)   # To create request 
+    soup = BeautifulSoup(response.text, 'lxml')
+    
+    # To print the url name
+    print("Processing {0}".format(url))
+    
+    # tag the div with is protfolio
+    quote_tag = soup.find('div', attrs = {'id': 'portfolio'})
 
-with open('Quotes_data.csv', 'w') as file:
-    writer = csv.DictWriter(file, ['quote', 'url'])
-    writer.writeheader()
-    for quote in data_quotes:
-         writer.writerow(quote)
+    if quote_tag is not None:
+        for row in quote_tag.find_all('div', attrs = {'class': 'portfolio-image'}):
+            quotes = {}
+            #print(row.img)
+            full_quote = row.img.get('alt') if row.img is not None else 'Quotation in not defined.'
+            src_quote = row.img.get('src') if row.img is not None else 'Source is not defined.'
+            #print(full_quote)
+            quotes['quotes'] = full_quote[:full_quote.rfind('.') + 1] # .rfind returns the count of argumetment possittion in a given string
+            quotes['source'] = src_quote
+            #print(quotes)
+            data_quotes.append(quotes)
+            writer.writerow(quotes)
+    else:
+        pass 
 
+f.close()
 
 
