@@ -41,11 +41,7 @@ while len(new_urls):
     # extract all email addresses and add them into the resulting set
     new_emails = set(re.findall(r"[a-z0-9\.\-+_]+@[a-z0-9\.\-+_]+\.[a-z]+", response.text, re.I))    
     emails.update(new_emails)
-    if len(new_emails) > 1:
-        for row in list(new_emails):
-            writer.writerow(row)
-    else:
-        writer.writerow(new_emails)
+    writer.writerow(new_emails)
 
     # create a beutiful soup for the html document
     soup = BeautifulSoup(response.text)
